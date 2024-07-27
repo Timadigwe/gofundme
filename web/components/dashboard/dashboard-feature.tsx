@@ -251,7 +251,7 @@ type CreateCampaignButtonProps = {
 const CreateCampaignButton: FC<CreateCampaignButtonProps> = ({onClick}) => {
   return (
     <button
-      className='hover:p-1.5 max-w-[22rem] md:ml-12 hover:text-black hover:bg-white ease-out duration-800 w-full p-2 border-2 rounded-lg text-sm text-white bg-black'
+      className='hover:p-1.5 max-w-[15rem] hover:text-black hover:bg-white ease-out duration-800 w-full p-2 border-2 rounded-lg text-sm text-white bg-black'
       onClick={(e) => {
         e.stopPropagation();
         onClick();
@@ -269,7 +269,7 @@ type WithdrawFundButtonProps = {
 const WithdrawFundButton: FC<WithdrawFundButtonProps> = ({onClick}) => {
   return (
     <button
-      className='hover:p-1.5 max-w-[22rem] md:ml-12 hover:text-black hover:bg-white ease-out duration-800 w-full p-2 border-2 rounded-lg text-sm text-white bg-black'
+      className='hover:p-1.5 max-w-[15rem] hover:text-black hover:bg-white ease-out duration-800 w-full p-2 border-2 rounded-lg text-sm text-white bg-black'
       onClick={(e) => {
         e.stopPropagation();
         onClick();
@@ -286,14 +286,14 @@ type CreateCampaignViewProps = {
 };
 const CreateCampaignView: FC<CreateCampaignViewProps> = ({onClick}) => {
   return (
-    <div className='flex flex-col md:flex-row md:justify-center gap-2'>
+    <div className='flex flex-col justify-center items-center mt-[9rem] gap-2'>
       <div className='flex'>
         <p className='w-[4.5rem]'>Title:</p>
-        <input type="text" placeholder='Enter campaign title' className='bg-white border-2 border-black px-2' />
+        <input type="text" placeholder='Enter campaign title' className='bg-white border-2 border-black px-2 w-[30rem]' />
       </div>
       <div className='flex'>
         <p className='w-[4.5rem]'>Amount:</p>
-        <input type="text" placeholder='Enter campaign target' className='bg-white border-2 border-black px-2'/>
+        <input type="text" placeholder='Enter campaign target' className='bg-white border-2 border-black px-2 w-[30rem]'/>
       </div>
 
       <button
@@ -306,8 +306,6 @@ const CreateCampaignView: FC<CreateCampaignViewProps> = ({onClick}) => {
       Create a campaign
     </button>
     </div>
-
-
   )
 };
 
@@ -316,22 +314,21 @@ type WithdrawViewProps = {
 };
 const WithdrawFundView: FC<WithdrawViewProps> = ({onClick}) => {
   return (
-    <div className='flex flex-col md:flex-row md:justify-center gap-2'>
+    <div className='flex flex-col justify-center items-center mt-[10rem] gap-2'>
       <div className='flex'>
         <p className='w-[4.5rem]'>Amount:</p>
-        <input type="number" placeholder='Enter amount to withdraw' className='bg-white border-2 border-black px-2' />
+        <input type="number" placeholder='Enter amount to withdraw' className='bg-white border-2 border-black px-2 w-[22rem]' />
       </div>
       
-
       <button
-      className='hover:p-1.5 max-w-[22rem] md:ml-12 hover:text-black hover:bg-white ease-out duration-800 w-full p-2 border-2 rounded-lg text-sm text-white bg-black'
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick();
-      }}
-    >
-      Withdraw Funds
-    </button>
+        className='hover:p-1.5 max-w-[22rem] md:ml-12 hover:text-black hover:bg-white ease-out duration-800 w-full p-2 border-2 rounded-lg text-sm text-white bg-black'
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+      >
+        Withdraw Funds
+      </button>
     </div>
 
 
@@ -355,18 +352,19 @@ export default function DashboardFeature() {
 
 
   const testProgram = () => {
-console.log("--testing program")
-if (wallet.publicKey && anchor_wallet) { 
+    console.log("--testing program")
+    if (wallet.publicKey && anchor_wallet) { 
 
   const campaignName = "Campaign djdksksdj"
   const amount = "40"
 
-  initialize(wallet.publicKey,anchor_wallet,connection,campaignName,amount).then((res) => {
-    console.log("res", res)
-  }).catch(err => {
-    console.error(err);
-  })
-}
+
+      initialize(wallet.publicKey,anchor_wallet,connection,campaignName,amount).then((res) => {
+        console.log("res", res)
+      }).catch(err => {
+        console.error(err);
+      })
+    }
   }
 
   return (
@@ -392,39 +390,43 @@ if (wallet.publicKey && anchor_wallet) {
         }
       />
 
-      {
-        view === AppView.CampaignList &&
-        (
-          <CreateCampaignButton 
-            onClick={() => {
-              setView(AppView.CampaignCreate);
-            }}
-          />
-        )
-      }
+      <div
+        className='flex md:ml-12 gap-2 mt-4'
+      >
+        {
+          view === AppView.CampaignList &&
+          (
+            <CreateCampaignButton 
+              onClick={() => {
+                setView(AppView.CampaignCreate);
+              }}
+            />
+          )
+        }
 
-      {
-        view === AppView.WithdrawFund && (
-          <WithdrawFundView 
-            onClick={() => setView(AppView.WithdrawFund)}
-          />
-        )
-      }
-
-      {
-        view === AppView.CampaignList && (
-          <WithdrawFundButton 
-            onClick={() => {
-              setView(AppView.WithdrawFund);
-            }}
-           /> 
-        )
-      }
+        {
+          view === AppView.CampaignList && (
+            <WithdrawFundButton 
+              onClick={() => {
+                setView(AppView.WithdrawFund);
+              }}
+            /> 
+          )
+        }
+      </div>
 
       {
         view === AppView.CampaignCreate && (
           <CreateCampaignView 
             onClick={() => setView(AppView.CampaignList)}
+          />
+        )
+      }      
+
+      {
+        view === AppView.WithdrawFund && (
+          <WithdrawFundView 
+            onClick={() => setView(AppView.WithdrawFund)}
           />
         )
       }
