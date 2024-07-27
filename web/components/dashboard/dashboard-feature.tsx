@@ -358,7 +358,7 @@ export default function DashboardFeature() {
 console.log("--testing program")
 if (wallet.publicKey && anchor_wallet) { 
 
-  const campaignName = "another useless one"
+  const campaignName = "Campaign djdksksdj"
   const amount = "40"
 
   initialize(wallet.publicKey,anchor_wallet,connection,campaignName,amount).then((res) => {

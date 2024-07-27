@@ -11,10 +11,11 @@ import {
     getAssociatedTokenAddress,
     getMint,
     getMultipleAccounts,
+    getOrCreateAssociatedTokenAccount,
   } from "@solana/spl-token";
   import { type SignerWalletAdapterProps } from "@solana/wallet-adapter-base";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
-import { type AccountMeta, type Connection, PublicKey } from "@solana/web3.js";
+import { type AccountMeta, type Connection, PublicKey, SystemProgram } from "@solana/web3.js";
 import idl from "../../idl/gofundmeprogram.json"
 import * as anchor from "@coral-xyz/anchor";
 import { Gofundmeprogram } from "@/idl/types/gofundmeprogram";
@@ -30,6 +31,7 @@ const usdcDevCoinMintAddress = new PublicKey(
     connection: Connection,
     campaignName: string,
     amount: string,) => {
+      // console.log("campaign name", campaignName);
         console.log("---getting mint")
         const mintInfo = await getMint(connection, usdcDevCoinMintAddress);
         const mintDecimals = Math.pow(10, mintInfo.decimals);
@@ -44,14 +46,21 @@ const usdcDevCoinMintAddress = new PublicKey(
               );
               console.log("programid",programId.toBase58());
 
-              const program = new Program(idl as Idl, provider)
+              const program = new Program(idl as unknown as Idl,)
 
-              let [campaignOwnerPDA] = PublicKey.findProgramAddressSync(
+
+              const tokenAccount = await  getAssociatedTokenAddress(
+                usdcDevCoinMintAddress,
+                publicKey,
+              );
+              
+
+              let [campaignOwnerPDA, campaignBump] = PublicKey.findProgramAddressSync(
                 [Buffer.from("owner"), Buffer.from(campaignName)],
                 programId
               );
               
-              let [tokenVault] = PublicKey.findProgramAddressSync(
+              let [tokenVault, bump] = PublicKey.findProgramAddressSync(
                 [
                   Buffer.from("vault"),
                   usdcDevCoinMintAddress.toBuffer(),
@@ -72,7 +81,8 @@ const usdcDevCoinMintAddress = new PublicKey(
                 campaign: campaignOwnerPDA,
                 vaultTokenAccount: tokenVault,
                 mintOfTokenBeingSent: usdcDevCoinMintAddress,
-                user: publicKey
+                user: publicKey,
+                userTokenAccount: tokenAccount
               })
               .rpc(confirmOptions)
 
