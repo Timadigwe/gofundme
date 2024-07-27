@@ -4,7 +4,7 @@
  * Note that this is only a type helper and is not the actual IDL. The original
  * IDL can be found at `target/idl/gofundmeprogram.json`.
  */
-export type Gofundmeprogram = {
+export const Gofundmeprogram = {
   "address": "5L1hGNy2PwsE1WMzyALoZtMtFnf2wf7swMW7BYmckfEC",
   "metadata": {
     "name": "gofundmeprogram",

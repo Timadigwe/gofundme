@@ -10,6 +10,7 @@ import { BasicCreate, BasicProgram } from './basic-ui';
 export default function BasicFeature() {
   const { publicKey } = useWallet();
   const { programId } = useBasicProgram();
+  console.log({programId});
 
   return publicKey ? (
     <div>

@@ -60,8 +60,8 @@ export function UiLayout({
             </div>
           }
         ><div className="flex-none space-x-2">
-        <WalletButton />
-        <ClusterUiSelect />
+        {/* <WalletButton /> */}
+        {/* <ClusterUiSelect /> */}
       </div>
           {children}
         </Suspense>
