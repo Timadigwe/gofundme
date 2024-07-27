@@ -59,7 +59,10 @@ export function UiLayout({
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           }
-        >
+        ><div className="flex-none space-x-2">
+        <WalletButton />
+        <ClusterUiSelect />
+      </div>
           {children}
         </Suspense>
         <Toaster position="bottom-right" />

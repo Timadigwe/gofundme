@@ -4,6 +4,8 @@ import { FC, useState } from 'react';
 import { AppHero } from '../ui/ui-layout';
 import { time } from 'console';
 import { title } from 'process';
+import { useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { initialize } from '@/app/utils/helpers';
 
 const links: { label: string; href: string }[] = [
   { label: 'Solana Docs', href: 'https://docs.solana.com/' },
@@ -346,11 +348,32 @@ enum AppView {
 export default function DashboardFeature() {
   const [view, setView] = useState(AppView.CampaignList);
   const [currentData, setCurrentData] = useState({title: "", amount: 0});
+  const { connection } = useConnection();
+  const anchor_wallet = useAnchorWallet();
+  const wallet = useWallet();
+  const publickey = wallet.publicKey;
+
+
+  const testProgram = () => {
+console.log("--testing program")
+if (wallet.publicKey && anchor_wallet) { 
+
+  const campaignName = "another useless one"
+  const amount = "40"
+
+  initialize(wallet.publicKey,anchor_wallet,connection,campaignName,amount).then((res) => {
+    console.log("res", res)
+  }).catch(err => {
+    console.error(err);
+  })
+}
+  }
 
   return (
     <div
       className="w-full h-[100dvh] flex flex-col gap-2 p-3"
     >
+      <div className='text-black ' onClick={testProgram} >Button</div>
       {
         view !== AppView.CampaignList &&
         (
