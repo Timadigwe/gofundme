@@ -1,6 +1,6 @@
 'use client';
 
-import { programId, getBasicProgram } from '@gofundme/anchor';
+// import { programId, getBasicProgram } from '@gofundme/anchor';
 import { Program } from '@coral-xyz/anchor';
 import { useConnection } from '@solana/wallet-adapter-react';
 import { Keypair } from '@solana/web3.js';
