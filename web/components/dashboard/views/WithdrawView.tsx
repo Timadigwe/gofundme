@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { BaseButton } from '../buttons/BaseButton';
 
 type WithdrawViewProps = {
   onClick: () => void;
@@ -9,21 +10,19 @@ export const WithdrawFundView: FC<WithdrawViewProps> = ({ onClick }) => {
       <div className="flex">
         <p className="w-[4.5rem]">Amount:</p>
         <input
-          type="number"
-          placeholder="Enter amount to withdraw"
-          className="bg-white border-2 border-black px-2 w-[22rem]"
-        />
+          type="text"
+          placeholder="Enter withdraw amount"
+            className="bg-white p-3 px-12 rounded-xl focus-visible::border-0"
+          // className="bg-white border-2 border-black px-2 w-[30rem]"
+        />        
       </div>
 
-      <button
-        className="hover:p-1.5 max-w-[22rem] md:ml-12 hover:text-black hover:bg-white ease-out duration-800 w-full p-2 border-2 rounded-lg text-sm text-white bg-black"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick();
-        }}
-      >
-        Withdraw Funds
-      </button>
+      <div className='w-full max-w-[22rem] mt-2'>
+        <BaseButton
+          text={"Withdraw Funds"} 
+          onClick={onClick}
+        />
+      </div>      
     </div>
   );
 };

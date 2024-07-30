@@ -7,21 +7,23 @@ import {
   useWallet,
 } from '@solana/wallet-adapter-react';
 import { initialize } from '@/app/utils/helpers';
-import { CreateCampaignButton } from './buttons/CreateCampaignButton';
-import { WithdrawFundButton } from './buttons/WithdrawFundsButton';
-import { ConnectWalletButton } from './buttons/ConnectButton';
 import { DonateView } from './views/DonateView';
 import { DetailsView } from './views/DetailsView';
 import { CampaignCardList } from './CampaignCardList';
 import { WithdrawFundView } from './views/WithdrawView';
 import { CreateCampaignView } from './views/CreateCampaignView';
+import Image from 'next/image';
+import { IconArrowLeft } from '@tabler/icons-react';
+import { BaseButton } from './buttons/BaseButton';
+
+
 
 type HeaderTextProps = {
   headerText: string;
 };
 const HeaderText: FC<HeaderTextProps> = ({ headerText }) => {
   return (
-    <p className="text-[32px] md:text-[48px] font-extrabold text-center">
+    <p className="text-[32px] md:text-[48px] font-extrabold text-center font-mono">
       {headerText}
     </p>
   );
@@ -42,13 +44,14 @@ export default function DashboardFeature() {
   const wallet = useWallet();
   const publicKey = wallet.publicKey;
 
+
   const testProgram = () => {
     console.log('--testing program');
     if (publicKey && anchor_wallet) {
       const campaignName = 'Campaign djdksksdj';
-      const amount = '40';
+      // const amount = '40';
 
-      initialize(publicKey, anchor_wallet, connection, campaignName, amount)
+      initialize(publicKey, anchor_wallet, connection, campaignName, )
         .then((res) => {
           console.log('res', res);
         })
@@ -59,18 +62,16 @@ export default function DashboardFeature() {
   };
 
   return (
-    <div className="w-full h-[100dvh] flex flex-col gap-2 p-3">
-      <div className="absolute underline cursor-pointer top-2 right-6 w-[8rem]">
-        <ConnectWalletButton onClick={testProgram} />
+    <div className="w-full h-[100dvh] flex flex-col gap-2 p-3 bg-stone-300">
+      <div className="flex items-center w-full justify-between md:px-4">
+        <div className="cursor-pointer w-[8rem] flex gap-2 items-center">
+          <Image src={'/app-logo.png'} alt="app logo" width={40} height={40} />
+          <p className={"font-extrabold text-xl font-mono"}>dropfunds</p>
+        </div>
+        <div className="underline cursor-pointer w-[8rem]">
+          <BaseButton text={"Connect"} onClick={testProgram} />  
+        </div>
       </div>
-      {view !== AppView.CampaignList && (
-        <p
-          className="absolute underline cursor-pointer"
-          onClick={() => setView(AppView.CampaignList)}
-        >
-          close
-        </p>
-      )}
       <HeaderText
         headerText={
           view === AppView.CampaignList
@@ -84,22 +85,36 @@ export default function DashboardFeature() {
             : 'Donate'
         }
       />
+      {
+        view !== AppView.CampaignList && 
+        (
+          <div className='text-lg md:pl-6'>
+            <IconArrowLeft style={{cursor: "pointer", color: "#000000"}} onClick={() => setView(AppView.CampaignList)} />
+          </div>
+        )
+      }
 
       <div className="flex md:ml-12 gap-2 mt-4">
         {view === AppView.CampaignList && (
-          <CreateCampaignButton
-            onClick={() => {
-              setView(AppView.CampaignCreate);
-            }}
-          />
+          <div className='w-full max-w-[22rem]' >
+            <BaseButton 
+              text={"Create a campaign"} 
+              onClick={() => {
+                setView(AppView.CampaignCreate);
+              }} 
+            />
+          </div>
         )}
 
         {view === AppView.CampaignList && (
-          <WithdrawFundButton
-            onClick={() => {
-              setView(AppView.WithdrawFund);
-            }}
-          />
+          <div className='w-full max-w-[22rem]' >
+            <BaseButton 
+              text={"Withdraw funds"} 
+              onClick={() => {
+                setView(AppView.WithdrawFund);
+              }} 
+            />          
+          </div>
         )}
       </div>
 
