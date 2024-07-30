@@ -17,3 +17,28 @@ body {
 .wallet-adapter-button {
   font-family: inherit !important;
 }
+
+.bg-education {
+  background-color: lightblue;
+  color: black; /* Adjust text color as needed */
+}
+
+.bg-personal {
+  background-color: lightgreen;
+  color: black; /* Adjust text color as needed */
+}
+
+.bg-community {
+  background-color: lightyellow;
+  color: black; /* Adjust text color as needed */
+}
+
+.bg-health {
+  background-color: lightcoral;
+  color: black; /* Adjust text color as needed */
+}
+
+.bg-project {
+  background-color: lightgray;
+  color: black; /* Adjust text color as needed */
+}

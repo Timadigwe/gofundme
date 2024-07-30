@@ -1,7 +1,12 @@
 import { FC } from 'react';
 import { BaseButton } from './buttons/BaseButton';
 
-type CampaignCategory = 'Education' | 'Personal' | 'Community' | 'Health' | 'Project';
+type CampaignCategory =
+  | 'Education'
+  | 'Personal'
+  | 'Community'
+  | 'Health'
+  | 'Project';
 
 type CampaignData = {
   category: CampaignCategory;
@@ -52,24 +57,41 @@ const CampaignCard: FC<CampaignCardProps> = ({
   onCardClick,
   onDonateClick,
 }) => {
-  const { 
-    category, title, amount, raised, daysLeft
-  } = campaignData;
+  const { category, title, amount, raised, daysLeft } = campaignData;
+
+  const getCategoryClass = (category: CampaignCategory) => {
+    switch (category) {
+      case 'Education':
+        return 'bg-education';
+      case 'Personal':
+        return 'bg-personal';
+      case 'Community':
+        return 'bg-community';
+      case 'Health':
+        return 'bg-health';
+      case 'Project':
+        return 'bg-project';
+      default:
+        return '';
+    }
+  };
 
   return (
     <div
-      className="bg-slate-800 w-full sm:max-w-[22rem] lg:max-w-[20rem] hover:lg:max-w-[20.5rem] min-h-[16rem] rounded-2xl p-6 relative text-white shadow-lg hover:shadow-xl transition-all duration-300"
+      className={`w-full sm:max-w-[22rem] lg:max-w-[20rem] hover:lg:max-w-[20.5rem] min-h-[16rem] rounded-2xl p-6 relative shadow-lg hover:shadow-xl transition-all duration-300 ${getCategoryClass(
+        category
+      )}`}
       onClick={onCardClick}
     >
-      <p className="text-sm font-light text-gray-400">{category}</p>
+      <p className="text-sm font-light">{category}</p>
       <p className="text-2xl font-bold mb-6">{title}</p>
       <div className="mb-4">
         <p className="font-bold text-lg">◎{amount}</p>
-        <p className="font-light text-sm text-gray-400">◎{raised} raised</p>
-        <p className="font-light text-sm text-gray-400">{daysLeft} days left</p>
+        <p className="font-light text-sm">◎{raised} raised</p>
+        <p className="font-light text-sm">{daysLeft} days left</p>
       </div>
       <div className="absolute bottom-4 right-4">
-        <BaseButton text={"Donate now"} onClick={onDonateClick} />
+        <BaseButton text={'Donate now'} onClick={onDonateClick} />
       </div>
     </div>
   );
@@ -85,12 +107,17 @@ export const CampaignCardList: FC<CampaignCardListProps> = ({
 }) => {
   return (
     <div className="lg:p-4 flex sm:flex-col justify-center  md:flex-row gap-4 overflow-y-scroll flex-wrap cursor-pointer font-mono">
-      {[...campaignData, ...campaignData, ...campaignData].map(
+      {[...campaignData, ...campaignData.reverse(), ...campaignData].map(
         (campaignData, index) => (
           <CampaignCard
             key={index + 'str'}
             campaignData={campaignData}
-            onCardClick={() => onCardClick({ title: campaignData.title, amount: campaignData.amount })}
+            onCardClick={() =>
+              onCardClick({
+                title: campaignData.title,
+                amount: campaignData.amount,
+              })
+            }
             onDonateClick={onDonateClick}
           />
         )
