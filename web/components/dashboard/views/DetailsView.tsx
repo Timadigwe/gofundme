@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { CampaignDonateButton } from '../buttons/CampaignDonateButton';
+import { BaseButton } from '../buttons/BaseButton';
+
 
 type InnerAmtProps = {
   text: string;
@@ -25,16 +26,15 @@ export const DetailsView: FC<DetailsViewProps> = ({
   onDonateClick,
 }) => {
   return (
-    <div className="items-center flex flex-col pt-20 p-5 h-[100dvh]">
+    <div className="md:items-center flex flex-col  overflow-y-scroll md:pt-20 p-5 font-mono">
       <p className="text-xl font-extrabold">{title}</p>
-      ou
       <div className="border-2 rounded-lg border-black w-full h-[6rem] my-3 flex">
         <InnerAmt text={'Raised'} amount={2000} />
         <InnerAmt text={'Target'} amount={5000} />
         <InnerAmt text={'Donations'} amount={50} />
       </div>
       <p className="self-start font-bold">About</p>
-      <p>
+      <p className='pb-5'>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
         veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
@@ -42,7 +42,7 @@ export const DetailsView: FC<DetailsViewProps> = ({
         velit esse cillum dolore eu fugiat nulla pariatur.
       </p>
       <div className="mt-auto">
-        <CampaignDonateButton onClick={onDonateClick} />
+        <BaseButton text={"Donate now"} onClick={onDonateClick} />
       </div>
     </div>
   );
