@@ -9,8 +9,7 @@ import { CreateCampaignView } from './views/CreateCampaignView';
 import Image from 'next/image';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { BaseButton } from './buttons/BaseButton';
-import { useWalletConnect } from './useWalletConnect';
-import { connectWallet } from './connect.wallet';
+import { WalletButton } from '../solana/solana-provider';
 
 type HeaderTextProps = {
   headerText: string;
@@ -33,12 +32,7 @@ enum AppView {
 export default function DashboardFeature() {
   const [view, setView] = useState(AppView.CampaignList);
   const [currentData, setCurrentData] = useState({ title: '', amount: 0 });
-  const { connection, anchor_wallet, wallet } = useWalletConnect();
-  const publicKey = wallet.publicKey;
 
-  const triggerWalletConnection = () => {
-    connectWallet(publicKey, anchor_wallet, connection);
-  };
 
   return (
     <div className="w-full h-[100dvh] flex flex-col gap-2 p-3 bg-stone-300">
@@ -47,8 +41,9 @@ export default function DashboardFeature() {
           <Image src={'/app-logo.png'} alt="app logo" width={40} height={40} />
           <p className={'font-extrabold text-xl font-mono'}>dropfunds</p>
         </div>
-        <div className="underline cursor-pointer w-[8rem]">
-          <BaseButton text={'Connect'} onClick={triggerWalletConnection} />
+        <div className="underline cursor-pointer">
+          {/* <BaseButton text={'Connect'} onClick={triggerWalletConnection} /> */}
+          <WalletButton />
         </div>
       </div>
       <HeaderText
@@ -98,7 +93,7 @@ export default function DashboardFeature() {
       </div>
 
       {view === AppView.CampaignCreate && (
-        <CreateCampaignView onClick={() => setView(AppView.CampaignList)} />
+        <CreateCampaignView setView={() => setView(AppView.CampaignList)} />
       )}
 
       {view === AppView.WithdrawFund && (

@@ -11,11 +11,10 @@ import {
   getAssociatedTokenAddress,
   getMint,
 } from "@solana/spl-token";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { Connection, PublicKey, SystemProgram } from "@solana/web3.js";
-import idl from "../../idl/gofundmeprogram.json";
-import * as anchor from "@coral-xyz/anchor";
+import type { AnchorWallet } from "@solana/wallet-adapter-react";
+import {type Connection, PublicKey, SystemProgram } from "@solana/web3.js";
 import { Gofundmeprogram } from "@/idl/types/gofundmeprogram";
+import idl from "../../idl/gofundmeprogram.json"
 
 const usdcDevCoinMintAddress = new PublicKey(
   "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
@@ -39,10 +38,10 @@ export const initialize = async (
       setProvider(provider);
       console.log("---provider set up 2");
 
-      const programId = new PublicKey("5L1hGNy2PwsE1WMzyALoZtMtFnf2wf7swMW7BYmckfEC");
+      const programId = new PublicKey("B8VbcNKyCsMorXQMD5WRqmkDymijYtscp4Yur5itVrgx");
       console.log("programid", programId.toBase58());
 
-      const program = new Program(Gofundmeprogram as Idl, provider);
+      const program = new Program(idl as Idl,programId,provider);
 
       const tokenAccount = await getAssociatedTokenAddress(
         usdcDevCoinMintAddress,
@@ -70,7 +69,7 @@ export const initialize = async (
         skipPreflight: true,
       };
 
-      console.log("Program Methods:", program.methods);
+      //console.log("Program Methods:", program.methods);
 
       // Ensure 'initialize' exists and is correctly named in the IDL
       if (!program.methods.initialize) {
@@ -86,8 +85,8 @@ export const initialize = async (
           user: publicKey,
           userTokenAccount: tokenAccount,
           systemProgram: SystemProgram.programId,
-          tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          // tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+          // rent: anchor.web3.SYSVAR_RENT_PUBKEY,
         })
         .rpc(confirmOptions);
 
