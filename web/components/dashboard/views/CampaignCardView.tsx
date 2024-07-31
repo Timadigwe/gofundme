@@ -1,20 +1,6 @@
 import { FC } from 'react';
-import { BaseButton } from './buttons/BaseButton';
-
-type CampaignCategory =
-  | 'Education'
-  | 'Personal'
-  | 'Community'
-  | 'Health'
-  | 'Project';
-
-type CampaignData = {
-  category: CampaignCategory;
-  title: string;
-  amount: number;
-  raised: number;
-  daysLeft: number;
-};
+import { BaseButton } from '../buttons/BaseButton';
+import { CampaignCategory, CampaignData } from '../types';
 
 const campaignData: Array<CampaignData> = [
   {
@@ -44,6 +30,13 @@ const campaignData: Array<CampaignData> = [
     amount: 2500,
     raised: 245,
     daysLeft: 24,
+  },
+  {
+    category: 'Project',
+    title: 'Build spaceship',
+    amount: 45000,
+    raised: 2145,
+    daysLeft: 214,
   },
 ];
 
@@ -98,10 +91,10 @@ const CampaignCard: FC<CampaignCardProps> = ({
 };
 
 type CampaignCardListProps = {
-  onCardClick: (currentData: { title: string; amount: number }) => void;
+  onCardClick: (currentData: CampaignData) => void;
   onDonateClick: () => void;
 };
-export const CampaignCardList: FC<CampaignCardListProps> = ({
+export const CampaignCardView: FC<CampaignCardListProps> = ({
   onCardClick,
   onDonateClick,
 }) => {
@@ -112,12 +105,7 @@ export const CampaignCardList: FC<CampaignCardListProps> = ({
           <CampaignCard
             key={index + 'str'}
             campaignData={campaignData}
-            onCardClick={() =>
-              onCardClick({
-                title: campaignData.title,
-                amount: campaignData.amount,
-              })
-            }
+            onCardClick={() => onCardClick(campaignData)}
             onDonateClick={onDonateClick}
           />
         )
