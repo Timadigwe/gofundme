@@ -1,11 +1,12 @@
 
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { initialize } from '@/app/utils/helpers';
+import { fetchAllCampaigns, initialize, PROGRAMID } from '@/app/utils/helpers';
 import { PublicKey, Connection } from '@solana/web3.js';
 import { useWalletConnect } from '../useWalletConnect';
 import { CampaignCategory } from '../types';
+import { Campaign } from '@/app/utils/campaigns';
 // import Image from 'next/image';
 
 type CategoryCardProps = {
@@ -53,10 +54,13 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
 
   const [campaignTitle, setCampaignTitle] = useState<string>("");
   const [campaignAmount, setCampaignAmount] = useState<string>("");
+  const [campaignDate, setCampaignDate] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
    const { connection, anchor_wallet, wallet } = useWalletConnect();
   const publicKey = wallet.publicKey;
+
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
   
 
@@ -68,11 +72,27 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
     setCampaignAmount(e.target.value);
   };
 
+  const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCampaignDate(e.target.value);
+  };
+
+  useEffect(() => {
+    connection.getProgramAccounts(new PublicKey(PROGRAMID)).then(async  (accounts) => {
+      const campaigns: Campaign[] = accounts.reduce((accum:Campaign[], {pubkey, account}) => {
+        const campaign = Campaign.deserialize(account.data)
+        if(!campaign){
+          return accum
+        }
+        return [...accum, campaign]
+      },[])
+      setCampaigns(campaigns)
+    })
+  },[])
 
   const createCampaign = () => {
     setIsLoading(true);
-    if (publicKey && anchor_wallet && connection) {
-      initialize(publicKey, anchor_wallet, connection, campaignTitle)
+    if (publicKey && anchor_wallet && connection && category) {
+      initialize(publicKey, anchor_wallet, connection, campaignTitle, campaignAmount,campaignDate,category)
       .then((res) => {
         console.log('res', res);
         setIsLoading(false)
@@ -84,6 +104,12 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       });
      }
   }
+
+  // console.log("category:", category);
+  // console.log("campaign title:", campaignTitle);
+  // console.log("campaign amount:", campaignAmount);
+  // console.log("campaign end date:", campaignDate);
+  console.log("campaigns:",campaigns);
 
   return (
     <div className="flex flex-col justify-center items-center gap-2 font-mono">
@@ -154,6 +180,8 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
         />
         <input
           type="date"
+          value={campaignDate}
+          onChange={handleDateChange}
           // placeholder="Enter campaign target"
           className="bg-white text-black w-[22rem] p-3 rounded-xl focus-visible::border-0"
           min={new Date().toISOString()}

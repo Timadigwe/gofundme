@@ -12,12 +12,12 @@ export const connectWallet = (
     const campaignName = 'alright lets try this';
     // const amount = '40';
 
-    initialize(publicKey, anchor_wallet, connection, campaignName)
-      .then((res) => {
-        console.log('res', res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    // initialize(publicKey, anchor_wallet, connection, campaignName)
+    //   .then((res) => {
+    //     console.log('res', res);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   }
 };

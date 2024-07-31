@@ -20,11 +20,16 @@ const usdcDevCoinMintAddress = new PublicKey(
   "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
 );
 
+export const PROGRAMID = new PublicKey("B8VbcNKyCsMorXQMD5WRqmkDymijYtscp4Yur5itVrgx");
+
 export const initialize = async (
   publicKey: PublicKey,
   anchor_wallet: AnchorWallet,
   connection: Connection,
-  campaignName: string
+  campaignName: string,
+  campaignAmount: string,
+  campaignDate: string,
+  category:string
 ) => {
   try {
     console.log("---getting mint");
@@ -33,15 +38,9 @@ export const initialize = async (
     console.log("mintDecimals", mintDecimals);
 
     if (publicKey && anchor_wallet) {
-      console.log("---provider set up 1");
       const provider = new AnchorProvider(connection, anchor_wallet, {});
       setProvider(provider);
-      console.log("---provider set up 2");
-
-      const programId = new PublicKey("B8VbcNKyCsMorXQMD5WRqmkDymijYtscp4Yur5itVrgx");
-      console.log("programid", programId.toBase58());
-
-      const program = new Program(idl as Idl,programId,provider);
+      const program = new Program(idl as Idl,PROGRAMID,provider);
 
       const tokenAccount = await getAssociatedTokenAddress(
         usdcDevCoinMintAddress,
@@ -50,7 +49,7 @@ export const initialize = async (
 
       let [campaignOwnerPDA, campaignBump] = PublicKey.findProgramAddressSync(
         [Buffer.from("owner"), Buffer.from(campaignName)],
-        programId
+        PROGRAMID
       );
 
       let [tokenVault, bump] = PublicKey.findProgramAddressSync(
@@ -59,7 +58,7 @@ export const initialize = async (
           usdcDevCoinMintAddress.toBuffer(),
           Buffer.from(campaignName),
         ],
-        programId
+        PROGRAMID
       );
 
       console.log("TokenAccountOwnerPda: " + campaignOwnerPDA);
@@ -77,7 +76,7 @@ export const initialize = async (
       }
 
       let txHash = await program.methods
-        .initialize(campaignName)
+        .initialize(campaignName, new BN(parseInt(campaignAmount)),campaignDate,category)
         .accounts({
           campaign: campaignOwnerPDA,
           vaultTokenAccount: tokenVault,
@@ -98,6 +97,29 @@ export const initialize = async (
   }
 };
 
+
+export async function fetchAllCampaigns( anchor_wallet: AnchorWallet,
+  connection: Connection) {
+  // Fetch all accounts with the Campaign struct
+  const provider = new AnchorProvider(connection, anchor_wallet, {});
+      setProvider(provider);
+      const program = new Program(idl as Idl,PROGRAMID,provider);
+  const campaigns = await program.account.campaign.all();
+  
+  // Log all campaign accounts
+  campaigns.forEach((campaign) => {
+    console.log({
+      pubkey: campaign.publicKey.toString(),
+      owner: campaign.account.owner.toString(),
+      name: campaign.account.name,
+      amountRaised: campaign.account.amountRaised.toString(),
+      expectedAmount: campaign.account.expectedAmount.toString(),
+      endDate: campaign.account.endDate,
+      category: campaign.account.category,
+    });
+  });
+}
+
 async function logTransaction(txHash: string, connection: Connection) {
   const { blockhash, lastValidBlockHeight } =
     await connection.getLatestBlockhash();
@@ -112,3 +134,5 @@ async function logTransaction(txHash: string, connection: Connection) {
     `Solana Explorer: https://explorer.solana.com/tx/${txHash}?cluster=devnet`
   );
 }
+
+

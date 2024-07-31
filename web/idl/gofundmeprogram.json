@@ -57,6 +57,18 @@
         {
           "name": "campaignName",
           "type": "string"
+        },
+        {
+          "name": "expectedAmount",
+          "type": "u64"
+        },
+        {
+          "name": "endDate",
+          "type": "string"
+        },
+        {
+          "name": "category",
+          "type": "string"
         }
       ]
     },
@@ -188,6 +200,18 @@
           {
             "name": "amountRaised",
             "type": "u64"
+          },
+          {
+            "name": "expectedAmount",
+            "type": "u64"
+          },
+          {
+            "name": "endDate",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
           }
         ]
       }
