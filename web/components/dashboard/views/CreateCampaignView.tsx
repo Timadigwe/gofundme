@@ -103,7 +103,7 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
         />
         <input
           type="number"
-          placeholder="amount in sols"
+          placeholder="Amount (◎)"
           className="bg-white p-3 w-[22rem] rounded-xl focus-visible::border-0"
         />
         <input
