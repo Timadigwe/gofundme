@@ -11,7 +11,7 @@ export const DonateView: FC<DonateViewProps> = ({ onClick }) => {
         <div className="flex flex-col gap-4 mb-4">
           <input
             type="number"
-            placeholder="Enter donation amount"
+            placeholder="Enter donation amount (◎)"
             className="bg-white p-3 px-12 rounded-xl focus-visible::border-0"
           />
         </div>

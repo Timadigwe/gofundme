@@ -31,8 +31,8 @@ export const DetailsView: FC<DetailsViewProps> = ({
         <p className="text-xl font-bold">{category}</p>
         <p className="my-20 text-3xl font-extrabold">{title}</p>
         <div className="border-2 rounded-lg border-black w-full h-[6rem] my-3 flex">
-          <InnerAmt text={'Raised'} amount={raised} />
-          <InnerAmt text={'Target'} amount={amount} />
+          <InnerAmt text={'Raised (◎)'} amount={raised} />
+          <InnerAmt text={'Target (◎)'} amount={amount} />
           <InnerAmt text={'Days left'} amount={daysLeft} />
         </div>
         <div className="mt-auto">
