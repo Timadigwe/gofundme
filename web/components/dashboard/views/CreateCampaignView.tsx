@@ -1,5 +1,10 @@
-import { FC, useState } from 'react';
+
+import { ChangeEvent, FC, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
+import { initialize } from '@/app/utils/helpers';
+import { PublicKey, Connection } from '@solana/web3.js';
+import { useWalletConnect } from '../useWalletConnect';
 import { CampaignCategory } from '../types';
 // import Image from 'next/image';
 
@@ -9,6 +14,11 @@ type CategoryCardProps = {
   isSelected: boolean;
   onClick: () => void;
 };
+
+type CreateCampaignViewProps = {
+  setView: () => void;
+};
+
 const CategoryCard: FC<CategoryCardProps> = ({
   src,
   category,
@@ -36,13 +46,45 @@ const CategoryCard: FC<CategoryCardProps> = ({
   );
 };
 
-type CreateCampaignViewProps = {
-  onClick: () => void;
-};
 export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
-  onClick,
+  setView,
 }) => {
   const [category, setCategory] = useState<CampaignCategory>();
+
+  const [campaignTitle, setCampaignTitle] = useState<string>("");
+  const [campaignAmount, setCampaignAmount] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+   const { connection, anchor_wallet, wallet } = useWalletConnect();
+  const publicKey = wallet.publicKey;
+
+  
+
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCampaignTitle(e.target.value);
+  };
+
+  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCampaignAmount(e.target.value);
+  };
+
+
+  const createCampaign = () => {
+    setIsLoading(true);
+    if (publicKey && anchor_wallet && connection) {
+      initialize(publicKey, anchor_wallet, connection, campaignTitle)
+      .then((res) => {
+        console.log('res', res);
+        setIsLoading(false)
+        setView()
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false)
+      });
+     }
+  }
+
   return (
     <div className="flex flex-col justify-center items-center gap-2 font-mono">
       <p className="font-mono self-center mb-[1rem]">
@@ -98,12 +140,16 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       <div className="flex flex-col gap-4">
         <input
           type="text"
+          value={campaignTitle}
+          onChange={handleTitleChange}
           placeholder="Enter campaign title"
           className="bg-white p-3 w-[22rem] rounded-xl focus-visible::border-0"
         />
         <input
           type="number"
           placeholder="amount in sols"
+         value={campaignAmount}
+          onChange={handleAmountChange}
           className="bg-white p-3 w-[22rem] rounded-xl focus-visible::border-0"
         />
         <input
@@ -114,8 +160,12 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
           style={{ color: 'black', colorScheme: 'light' }}
         />
       </div>
-      <div className="w-full max-w-[22rem] mt-2">
-        <BaseButton text={'Create a campaign'} onClick={onClick} />
+
+      <div className='w-full max-w-[22rem] mt-2'>
+        <BaseButton 
+          text={isLoading ? "...Loading":"Create a campaign"} 
+          onClick={createCampaign}
+        />
       </div>
     </div>
   );

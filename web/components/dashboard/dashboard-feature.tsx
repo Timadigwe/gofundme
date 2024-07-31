@@ -8,12 +8,11 @@ import { IconArrowLeft } from '@tabler/icons-react';
 import { DonateView } from './views/DonateView';
 import { DetailsView } from './views/DetailsView';
 import { BaseButton } from './buttons/BaseButton';
-import { connectWallet } from './connect.wallet';
-import { useWalletConnect } from './useWalletConnect';
 import { WithdrawFundView } from './views/WithdrawView';
 import { CampaignCardView } from './views/CampaignCardView';
 import { CreateCampaignView } from './views/CreateCampaignView';
 import { CampaignCategory, CampaignData } from './types';
+import { WalletButton } from '../solana/solana-provider';
 
 type HeaderTextProps = {
   headerText: string;
@@ -35,19 +34,8 @@ enum AppView {
 }
 export default function DashboardFeature() {
   const [view, setView] = useState(AppView.CampaignList);
-  const [currentData, setCurrentData] = useState<CampaignData>({
-    category: 'Personal',
-    title: '',
-    amount: 0,
-    raised: 0,
-    daysLeft: 0,
-  });
-  const { connection, anchor_wallet, wallet } = useWalletConnect();
-  const publicKey = wallet.publicKey;
 
-  const triggerWalletConnection = () => {
-    connectWallet(publicKey, anchor_wallet, connection);
-  };
+  const [currentData, setCurrentData] = useState({ title: '', amount: 0 });
 
   const DetailsBgImgSrcMap: Record<CampaignCategory, string> = {
     Project: 'project2.jpg',
@@ -82,8 +70,9 @@ export default function DashboardFeature() {
             dropfunds
           </p>
         </div>
-        <div className="underline cursor-pointer w-[8rem]">
-          <BaseButton text={'Connect'} onClick={triggerWalletConnection} />
+        <div className="underline cursor-pointer">
+          {/* <BaseButton text={'Connect'} onClick={triggerWalletConnection} /> */}
+          <WalletButton />
         </div>
       </div>
 
@@ -138,7 +127,7 @@ export default function DashboardFeature() {
       )}
 
       {view === AppView.CampaignCreate && (
-        <CreateCampaignView onClick={() => setView(AppView.CampaignList)} />
+        <CreateCampaignView setView={() => setView(AppView.CampaignList)} />
       )}
 
       {view === AppView.WithdrawFund && (

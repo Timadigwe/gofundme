@@ -9,7 +9,7 @@ export const connectWallet = (
 ) => {
   console.log('--testing program');
   if (publicKey && anchor_wallet && connection) {
-    const campaignName = 'Campaign djdksksdj';
+    const campaignName = 'alright lets try this';
     // const amount = '40';
 
     initialize(publicKey, anchor_wallet, connection, campaignName)
