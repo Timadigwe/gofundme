@@ -6,18 +6,18 @@ type DonateViewProps = {
 };
 export const DonateView: FC<DonateViewProps> = ({ onClick }) => {
   return (
-    <div className="h-[100dvh] flex flex-col w-full justify-center items-center font-mono">
-      <p className="font-extrabold text-lg pb-4">Enter amount</p>
-      <div className="flex flex-col md:flex-row gap-2 items-center">
-        <div className="items-center flex gap-2">
-          <p>◎</p>
+    <div className="flex justify-center overflow-y-scroll pt-[10rem] md:pt-[15rem] font-mono ">
+      <div className="w-full md:w-[25rem] h-[10rem] bg-stone-300 gap-4 rounded-[24px] self-end p-4 md:p-6">
+        <div className="flex flex-col gap-4 mb-4">
           <input
             type="number"
-            className="bg-white p-3 rounded-xl focus-visible::border-0"
-            placeholder="amount in sol"
+            placeholder="Enter donation amount"
+            className="bg-white p-3 px-12 rounded-xl focus-visible::border-0"
           />
         </div>
-        <BaseButton text={"Proceed to Payment"} onClick={onClick} />
+        <div className="w-full max-w-[22rem] mt-2">
+          <BaseButton text={'Proceed to Payment'} onClick={onClick} />
+        </div>
       </div>
     </div>
   );
