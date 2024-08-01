@@ -16,6 +16,9 @@ import {type Connection, PublicKey, SystemProgram } from "@solana/web3.js";
 import { Gofundmeprogram } from "@/idl/types/gofundmeprogram";
 import idl from "../../idl/gofundmeprogram.json"
 
+
+//There are a lot of code repitition which is necessary , but due to time constraints will leave it like this
+
 const usdcDevCoinMintAddress = new PublicKey(
   "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
 );
@@ -139,7 +142,7 @@ export const donate = async (
       skipPreflight: true,
     };
 
-    let txHash = await program.methods.donate(campaignName,new BN(parseInt(amount))).accounts({
+    let txHash = await program.methods.donate(campaignName,new BN(parseInt(amount) * mintDecimals)).accounts({
       campaign: campaignOwnerPDA,
       vaultTokenAccount: tokenVault,
       mintOfTokenBeingSent: usdcDevCoinMintAddress,
@@ -155,6 +158,67 @@ export const donate = async (
   } catch (error) {
     console.error("Error during donating:", error);
   }
+}
+
+export const withdraw = async (
+  publicKey: PublicKey,
+ anchor_wallet: AnchorWallet,
+ connection: Connection,
+ campaignName: string,
+ amount: string
+) => {
+ try {
+   console.log("---getting mint");
+ const mintInfo = await getMint(connection, usdcDevCoinMintAddress);
+ const mintDecimals = Math.pow(10, mintInfo.decimals);
+ console.log("mintDecimals", mintDecimals);
+ if (publicKey && anchor_wallet) { 
+   const provider = new AnchorProvider(connection, anchor_wallet, {});
+   setProvider(provider);
+   const program = new Program(idl as Idl,PROGRAMID,provider);
+
+   const tokenAccount = await getAssociatedTokenAddress(
+     usdcDevCoinMintAddress,
+     publicKey
+   );
+
+   let [campaignOwnerPDA, campaignBump] = PublicKey.findProgramAddressSync(
+     [Buffer.from("owner"), Buffer.from(campaignName)],
+     PROGRAMID
+   );
+
+   let [tokenVault, bump] = PublicKey.findProgramAddressSync(
+     [
+       Buffer.from("vault"),
+       usdcDevCoinMintAddress.toBuffer(),
+       Buffer.from(campaignName),
+     ],
+     PROGRAMID
+   );
+
+   console.log("TokenAccountOwnerPda: " + campaignOwnerPDA);
+   console.log("VaultAccount: " + tokenVault);
+
+   let confirmOptions = {
+     skipPreflight: true,
+   };
+
+   let txHash = await program.methods.withdraw(campaignName,new BN(parseInt(amount) * mintDecimals)).accounts({
+     campaign: campaignOwnerPDA,
+     vaultTokenAccount: tokenVault,
+     mintOfTokenBeingSent: usdcDevCoinMintAddress,
+     user: publicKey,
+     userTokenAccount: tokenAccount,
+     systemProgram: SystemProgram.programId,
+   })
+   .rpc(confirmOptions);
+
+   console.log(`Transferred ${amount} token out of the vault.`);
+   await logTransaction(txHash, connection);
+ }
+ } catch (error) {
+   console.error("Error during withdrawal:", error);
+ }
 }
 
 export async function fetchAllCampaigns( anchor_wallet: AnchorWallet,
