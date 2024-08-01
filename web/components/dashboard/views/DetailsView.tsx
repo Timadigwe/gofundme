@@ -31,7 +31,7 @@ export const DetailsView: FC<DetailsViewProps> = ({
         <p className="text-xl font-bold">{campaignData.category}</p>
         <p className="my-20 text-3xl font-extrabold">{campaignData.name}</p>
         <div className="border-2 rounded-lg border-black w-full h-[6rem] my-3 flex">
-          <InnerAmt text={'Raised'} amount={Number(campaignData.expectedAmount)}/>
+          <InnerAmt text={'Raised'} amount={Number(campaignData.amountRaised)}/>
           <InnerAmt text={'Target'} amount={Number(campaignData.expectedAmount)} />
           <InnerAmt text={'Days left'} amount={campaignData.endDate} />
         </div>

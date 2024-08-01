@@ -1,13 +1,13 @@
 
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
-import { fetchAllCampaigns, initialize, PROGRAMID } from '@/app/utils/helpers';
+import {  initialize } from '@/app/utils/helpers';
 import { useWalletConnect } from '../useWalletConnect';
 import { CampaignCategory } from '../types';
 // import Image from 'next/image';
 
 type CategoryCardProps = {
-  src: string;
+  src: string
   category: CampaignCategory;
   isSelected: boolean;
   onClick: () => void;
@@ -97,42 +97,42 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       <div className="flex px-5 md:px-0 md:justify-center gap-5 md:gap-10 flex-wrap w-full">
         <CategoryCard
           src={'/education.webp'}
-          category={'Education'}
-          isSelected={'Education' === category}
+          category={'education'}
+          isSelected={'education' === category}
           onClick={() => {
-            setCategory('Education');
+            setCategory('education');
           }}
         />
         <CategoryCard
           src={'/personal.webp'}
-          category={'Personal'}
-          isSelected={'Personal' === category}
+          category={'personal'}
+          isSelected={'personal' === category}
           onClick={() => {
-            setCategory('Personal');
+            setCategory('personal');
           }}
         />
         <CategoryCard
           src={'/community.webp'}
-          category={'Community'}
-          isSelected={'Community' === category}
+          category={'community'}
+          isSelected={'community' === category}
           onClick={() => {
-            setCategory('Community');
+            setCategory('community');
           }}
         />
         <CategoryCard
           src={'/health.webp'}
-          category={'Health'}
-          isSelected={'Health' === category}
+          category={'health'}
+          isSelected={'health' === category}
           onClick={() => {
-            setCategory('Health');
+            setCategory('health');
           }}
         />
         <CategoryCard
           src={'/project.webp'}
-          category={'Project'}
-          isSelected={'Project' === category}
+          category={'project'}
+          isSelected={'project' === category}
           onClick={() => {
-            setCategory('Project');
+            setCategory('project');
           }}
         />
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { IconArrowLeft } from '@tabler/icons-react';
 
@@ -13,6 +13,8 @@ import { CampaignCardView } from './views/CampaignCardView';
 import { CreateCampaignView } from './views/CreateCampaignView';
 import { CampaignCategory, CampaignData } from './types';
 import { WalletButton } from '../solana/solana-provider';
+import { useWalletConnect } from '../dashboard/useWalletConnect';
+import { fetchAllCampaigns } from '@/app/utils/helpers';
 
 type HeaderTextProps = {
   headerText: string;
@@ -36,6 +38,14 @@ export default function DashboardFeature() {
   const [view, setView] = useState(AppView.CampaignList);
 
   const [currentData, setCurrentData] = useState<any>({ title: '', amount: 0 });
+  const { connection, anchor_wallet } = useWalletConnect();
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+
+  const onCardClick = (campaignData :any) => {
+    //console.log("campaign data",campaignData)
+    setCurrentData(campaignData);
+    setView(AppView.CampaignDetails);
+  }
 
   const DetailsBgImgSrcMap: Record<CampaignCategory, string> = {
     project: 'project2.jpg',
@@ -45,6 +55,23 @@ export default function DashboardFeature() {
     personal: 'personal2.png',
   };
   const src = DetailsBgImgSrcMap[currentData.category?.toLowerCase()];
+
+  useEffect(() => {
+    console.log("fetching data");
+    const fetchCampaigns = async() => {
+      if(anchor_wallet && connection){
+       await fetchAllCampaigns(anchor_wallet,connection)
+       .then((campaigns) => {
+         //console.log("campaigns", campaigns)
+         setCampaigns(campaigns)
+       })
+       .catch((err) => {
+         console.error(err)
+       })
+      }
+    }
+    fetchCampaigns()
+   },[])
 
   return (
     <div
@@ -136,11 +163,8 @@ export default function DashboardFeature() {
 
       {view === AppView.CampaignList && (
         <CampaignCardView
-          onCardClick={(campaignData) => {
-            setCurrentData(campaignData);
-            setView(AppView.CampaignDetails);
-          }}
-          onDonateClick={() => setView(AppView.CampaignDonate)}
+          onCardClick={onCardClick}
+          campaigns={campaigns}
         />
       )}
 
@@ -154,8 +178,10 @@ export default function DashboardFeature() {
       {view === AppView.CampaignDonate && (
         <DonateView
           onClick={() => {
-            console.log('lol!');
+            // console.log('lol!');
+            setView(AppView.CampaignList);
           }}
+          campaignName={currentData?.name}
         />
       )}
     </div>

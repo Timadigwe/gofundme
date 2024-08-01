@@ -85,8 +85,6 @@ export const initialize = async (
           user: publicKey,
           userTokenAccount: tokenAccount,
           systemProgram: SystemProgram.programId,
-          // tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-          // rent: anchor.web3.SYSVAR_RENT_PUBKEY,
         })
         .rpc(confirmOptions);
 
@@ -98,6 +96,66 @@ export const initialize = async (
   }
 };
 
+export const donate = async (
+   publicKey: PublicKey,
+  anchor_wallet: AnchorWallet,
+  connection: Connection,
+  campaignName: string,
+  amount: string
+) => {
+  try {
+    console.log("---getting mint");
+  const mintInfo = await getMint(connection, usdcDevCoinMintAddress);
+  const mintDecimals = Math.pow(10, mintInfo.decimals);
+  console.log("mintDecimals", mintDecimals);
+  if (publicKey && anchor_wallet) { 
+    const provider = new AnchorProvider(connection, anchor_wallet, {});
+    setProvider(provider);
+    const program = new Program(idl as Idl,PROGRAMID,provider);
+
+    const tokenAccount = await getAssociatedTokenAddress(
+      usdcDevCoinMintAddress,
+      publicKey
+    );
+
+    let [campaignOwnerPDA, campaignBump] = PublicKey.findProgramAddressSync(
+      [Buffer.from("owner"), Buffer.from(campaignName)],
+      PROGRAMID
+    );
+
+    let [tokenVault, bump] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("vault"),
+        usdcDevCoinMintAddress.toBuffer(),
+        Buffer.from(campaignName),
+      ],
+      PROGRAMID
+    );
+
+    console.log("TokenAccountOwnerPda: " + campaignOwnerPDA);
+    console.log("VaultAccount: " + tokenVault);
+
+    let confirmOptions = {
+      skipPreflight: true,
+    };
+
+    let txHash = await program.methods.donate(campaignName,new BN(parseInt(amount))).accounts({
+      campaign: campaignOwnerPDA,
+      vaultTokenAccount: tokenVault,
+      mintOfTokenBeingSent: usdcDevCoinMintAddress,
+      user: publicKey,
+      userTokenAccount: tokenAccount,
+      systemProgram: SystemProgram.programId,
+    })
+    .rpc(confirmOptions);
+
+    console.log(`Transfer ${amount} token into the vault.`);
+    await logTransaction(txHash, connection);
+  }
+  } catch (error) {
+    console.error("Error during donating:", error);
+  }
+}
 
 export async function fetchAllCampaigns( anchor_wallet: AnchorWallet,
   connection: Connection) {

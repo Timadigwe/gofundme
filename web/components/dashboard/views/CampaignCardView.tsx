@@ -1,9 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
 import { CampaignCategory, CampaignData } from '../types';
-import { Campaign } from '@/app/utils/campaigns';
-import { useWalletConnect } from '../useWalletConnect';
-import { fetchAllCampaigns } from '@/app/utils/helpers';
 
 const campaignData: Array<CampaignData> = [
   {
@@ -46,12 +43,10 @@ const campaignData: Array<CampaignData> = [
 type CampaignCardProps = {
   campaignData: CampaignData;
   onCardClick: () => void;
-  onDonateClick: () => void;
 };
 const CampaignCard: FC<CampaignCardProps> = ({
   campaignData,
   onCardClick,
-  onDonateClick,
 }) => {
  
 
@@ -87,7 +82,7 @@ const CampaignCard: FC<CampaignCardProps> = ({
         <p className="font-light text-sm">{campaignData.endDate} days left</p>
       </div>
       <div className="absolute bottom-4 right-4">
-        <BaseButton text={'Donate now'} onClick={onDonateClick} />
+        <BaseButton text={'Donate now'} onClick={onCardClick} />
       </div>
     </div>
   );
@@ -95,31 +90,12 @@ const CampaignCard: FC<CampaignCardProps> = ({
 
 type CampaignCardListProps = {
   onCardClick: (currentData: CampaignData) => void;
-  onDonateClick: () => void;
+  campaigns: any[]
 };
 export const CampaignCardView: FC<CampaignCardListProps> = ({
   onCardClick,
-  onDonateClick,
+  campaigns
 }) => {
-  const { connection, anchor_wallet } = useWalletConnect();
-  const [campaigns, setCampaigns] = useState<any[]>([]);
-
-     useEffect(() => {
-   const fetchCampaigns = async() => {
-     if(anchor_wallet){
-      await fetchAllCampaigns(anchor_wallet,connection)
-      .then((campaigns) => {
-        //console.log("campaigns", campaigns)
-        setCampaigns(campaigns)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-     }
-   }
-   fetchCampaigns()
-  },[])
-
   return (
     <div className="lg:p-4 flex sm:flex-col justify-center  md:flex-row gap-4 overflow-y-scroll flex-wrap cursor-pointer font-mono">
       {campaigns.map((data, index) => (
@@ -127,7 +103,7 @@ export const CampaignCardView: FC<CampaignCardListProps> = ({
         key={index + 'str'}
         campaignData={data.account}
         onCardClick={() => onCardClick(data.account)}
-        onDonateClick={onDonateClick}
+        //onDonateClick={onDonateClick}
       />
       ))}
     </div>
