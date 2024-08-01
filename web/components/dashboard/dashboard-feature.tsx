@@ -158,7 +158,7 @@ export default function DashboardFeature() {
       )}
 
       {view === AppView.WithdrawFund && (
-        <WithdrawFundView onClick={() => setView(AppView.WithdrawFund)} />
+        <WithdrawFundView setView={() => setView(AppView.WithdrawFund)} />
       )}
 
       {view === AppView.CampaignList && (

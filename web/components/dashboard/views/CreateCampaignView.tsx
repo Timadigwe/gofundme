@@ -4,6 +4,7 @@ import { BaseButton } from '../buttons/BaseButton';
 import {  initialize } from '@/app/utils/helpers';
 import { useWalletConnect } from '../useWalletConnect';
 import { CampaignCategory } from '../types';
+import { toast, Toaster } from "sonner";
 // import Image from 'next/image';
 
 type CategoryCardProps = {
@@ -79,10 +80,12 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       .then((res) => {
         console.log('res', res);
         setIsLoading(false)
+        toast("Campaign created successfully");
         setView()
       })
       .catch((err) => {
         console.error(err);
+        toast("Oops something went wrong pls try again");
         setIsLoading(false)
       });
      }
@@ -90,6 +93,7 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
 
   return (
     <div className="flex flex-col justify-center items-center gap-2 font-mono">
+       <Toaster />
       <p className="font-mono self-center mb-[1rem]">
         Please select a category
       </p>

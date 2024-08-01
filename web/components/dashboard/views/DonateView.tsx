@@ -2,6 +2,7 @@ import { ChangeEvent, FC, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
 import { useWalletConnect } from '../useWalletConnect';
 import { donate } from '@/app/utils/helpers';
+import { toast, Toaster } from "sonner";
 
 type DonateViewProps = {
   onClick: () => void;
@@ -23,11 +24,13 @@ export const DonateView: FC<DonateViewProps> = ({ onClick, campaignName }) => {
       donate(publicKey,anchor_wallet,connection,campaignName,amount)
       .then((res) => {
         console.log('res', res);
-        setIsLoading(false)
+        setIsLoading(false);
+        toast(`You have successfully donated to ${campaignName}`)
         onClick()
       })
       .catch((err) => {
         console.error(err);
+        toast('SOmething went wrong pls try again')
         setIsLoading(false)
       });
      }
@@ -37,6 +40,7 @@ export const DonateView: FC<DonateViewProps> = ({ onClick, campaignName }) => {
   //console.log("name:", campaignName)
   return (
     <div className="flex justify-center overflow-y-scroll pt-[10rem] md:pt-[15rem] font-mono ">
+      <Toaster />
       <div className="w-full md:w-[25rem] h-[10rem] bg-stone-300 gap-4 rounded-[24px] self-end p-4 md:p-6">
         <div className="flex flex-col gap-4 mb-4">
           <input
