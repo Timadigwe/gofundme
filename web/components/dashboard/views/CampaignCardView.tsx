@@ -1,42 +1,45 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
 import { CampaignCategory, CampaignData } from '../types';
+import { Campaign } from '@/app/utils/campaigns';
+import { useWalletConnect } from '../useWalletConnect';
+import { fetchAllCampaigns } from '@/app/utils/helpers';
 
 const campaignData: Array<CampaignData> = [
   {
-    category: 'Education',
-    title: 'Give every kid free education',
-    amount: 5000,
-    raised: 245,
-    daysLeft: 24,
+    category: 'education',
+    name: 'Give every kid free education',
+    expectedAmount: 5000,
+    amountRaised: 245,
+    endDate: 24,
   },
   {
-    category: 'Personal',
-    title: 'I need to buy a house',
-    amount: 500,
-    raised: 245,
-    daysLeft: 24,
+    category: 'personal',
+    name: 'I need to buy a house',
+    expectedAmount: 500,
+    amountRaised: 245,
+    endDate: 24,
   },
   {
-    category: 'Community',
-    title: "Let's build a borehole",
-    amount: 1500,
-    raised: 245,
-    daysLeft: 24,
+    category: 'community',
+    name: "Let's build a borehole",
+    expectedAmount: 1500,
+   amountRaised: 245,
+  endDate: 24,
   },
   {
-    category: 'Health',
-    title: 'treat cancer',
-    amount: 2500,
-    raised: 245,
-    daysLeft: 24,
+    category: 'health',
+    name: 'treat cancer',
+    expectedAmount: 2500,
+   amountRaised: 245,
+  endDate: 24,
   },
   {
-    category: 'Project',
-    title: 'Build spaceship',
-    amount: 45000,
-    raised: 2145,
-    daysLeft: 214,
+    category: 'project',
+    name: 'Build spaceship',
+    expectedAmount: 45000,
+    amountRaised:2145,
+    endDate: 214,
   },
 ];
 
@@ -50,19 +53,19 @@ const CampaignCard: FC<CampaignCardProps> = ({
   onCardClick,
   onDonateClick,
 }) => {
-  const { category, title, amount, raised, daysLeft } = campaignData;
+ 
 
   const getCategoryClass = (category: CampaignCategory) => {
     switch (category) {
-      case 'Education':
+      case 'education' :
         return 'bg-education';
-      case 'Personal':
+      case 'personal':
         return 'bg-personal';
-      case 'Community':
+      case 'community':
         return 'bg-community';
-      case 'Health':
+      case 'health':
         return 'bg-health';
-      case 'Project':
+      case 'project':
         return 'bg-project';
       default:
         return '';
@@ -72,16 +75,16 @@ const CampaignCard: FC<CampaignCardProps> = ({
   return (
     <div
       className={`w-full sm:max-w-[22rem] lg:max-w-[20rem] hover:lg:max-w-[20.5rem] min-h-[16rem] rounded-2xl p-6 relative shadow-lg hover:shadow-xl transition-all duration-300 ${getCategoryClass(
-        category
+        campaignData.category.toLowerCase()
       )}`}
       onClick={onCardClick}
     >
-      <p className="text-sm font-light">{category}</p>
-      <p className="text-2xl font-bold mb-6">{title}</p>
+      <p className="text-sm font-light">{campaignData.category}</p>
+      <p className="text-2xl font-bold mb-6">{campaignData.name}</p>
       <div className="mb-4">
-        <p className="font-bold text-lg">◎{amount}</p>
-        <p className="font-light text-sm">◎{raised} raised</p>
-        <p className="font-light text-sm">{daysLeft} days left</p>
+        <p className="font-bold text-lg">◎ {Number(campaignData.expectedAmount)}</p>
+        <p className="font-light text-sm">◎ {Number(campaignData.amountRaised)} raised</p>
+        <p className="font-light text-sm">{campaignData.endDate} days left</p>
       </div>
       <div className="absolute bottom-4 right-4">
         <BaseButton text={'Donate now'} onClick={onDonateClick} />
@@ -98,18 +101,35 @@ export const CampaignCardView: FC<CampaignCardListProps> = ({
   onCardClick,
   onDonateClick,
 }) => {
+  const { connection, anchor_wallet } = useWalletConnect();
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+
+     useEffect(() => {
+   const fetchCampaigns = async() => {
+     if(anchor_wallet){
+      await fetchAllCampaigns(anchor_wallet,connection)
+      .then((campaigns) => {
+        //console.log("campaigns", campaigns)
+        setCampaigns(campaigns)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+     }
+   }
+   fetchCampaigns()
+  },[])
+
   return (
     <div className="lg:p-4 flex sm:flex-col justify-center  md:flex-row gap-4 overflow-y-scroll flex-wrap cursor-pointer font-mono">
-      {[...campaignData, ...campaignData.reverse(), ...campaignData].map(
-        (campaignData, index) => (
-          <CampaignCard
-            key={index + 'str'}
-            campaignData={campaignData}
-            onCardClick={() => onCardClick(campaignData)}
-            onDonateClick={onDonateClick}
-          />
-        )
-      )}
+      {campaigns.map((data, index) => (
+        <CampaignCard
+        key={index + 'str'}
+        campaignData={data.account}
+        onCardClick={() => onCardClick(data.account)}
+        onDonateClick={onDonateClick}
+      />
+      ))}
     </div>
   );
 };

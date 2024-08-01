@@ -1,12 +1,9 @@
 
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { fetchAllCampaigns, initialize, PROGRAMID } from '@/app/utils/helpers';
-import { PublicKey, Connection } from '@solana/web3.js';
 import { useWalletConnect } from '../useWalletConnect';
 import { CampaignCategory } from '../types';
-import { Campaign } from '@/app/utils/campaigns';
 // import Image from 'next/image';
 
 type CategoryCardProps = {
@@ -60,8 +57,6 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
    const { connection, anchor_wallet, wallet } = useWalletConnect();
   const publicKey = wallet.publicKey;
 
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-
   
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -76,18 +71,6 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
     setCampaignDate(e.target.value);
   };
 
-  useEffect(() => {
-    connection.getProgramAccounts(new PublicKey(PROGRAMID)).then(async  (accounts) => {
-      const campaigns: Campaign[] = accounts.reduce((accum:Campaign[], {pubkey, account}) => {
-        const campaign = Campaign.deserialize(account.data)
-        if(!campaign){
-          return accum
-        }
-        return [...accum, campaign]
-      },[])
-      setCampaigns(campaigns)
-    })
-  },[])
 
   const createCampaign = () => {
     setIsLoading(true);
@@ -104,12 +87,6 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       });
      }
   }
-
-  // console.log("category:", category);
-  // console.log("campaign title:", campaignTitle);
-  // console.log("campaign amount:", campaignAmount);
-  // console.log("campaign end date:", campaignDate);
-  console.log("campaigns:",campaigns);
 
   return (
     <div className="flex flex-col justify-center items-center gap-2 font-mono">
@@ -198,3 +175,4 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
     </div>
   );
 };
+

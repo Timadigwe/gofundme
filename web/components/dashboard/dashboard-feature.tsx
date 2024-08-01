@@ -35,16 +35,16 @@ enum AppView {
 export default function DashboardFeature() {
   const [view, setView] = useState(AppView.CampaignList);
 
-  const [currentData, setCurrentData] = useState({ title: '', amount: 0 });
+  const [currentData, setCurrentData] = useState<any>({ title: '', amount: 0 });
 
   const DetailsBgImgSrcMap: Record<CampaignCategory, string> = {
-    Project: 'project2.jpg',
-    Education: 'education2.jpeg',
-    Community: 'community2.jpg',
-    Health: 'health2.jpg',
-    Personal: 'personal2.png',
+    project: 'project2.jpg',
+    education: 'education2.jpeg',
+    community: 'community2.jpg',
+    health: 'health2.jpg',
+    personal: 'personal2.png',
   };
-  const src = DetailsBgImgSrcMap[currentData.category];
+  const src = DetailsBgImgSrcMap[currentData.category?.toLowerCase()];
 
   return (
     <div

@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "gofundmeprogram",
+  "name": "gofundme_ext",
   "constants": [
     {
       "name": "OWNER_PREFIX",

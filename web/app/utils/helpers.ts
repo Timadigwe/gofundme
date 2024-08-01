@@ -20,7 +20,8 @@ const usdcDevCoinMintAddress = new PublicKey(
   "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
 );
 
-export const PROGRAMID = new PublicKey("B8VbcNKyCsMorXQMD5WRqmkDymijYtscp4Yur5itVrgx");
+//export const PROGRAMID = new PublicKey("B8VbcNKyCsMorXQMD5WRqmkDymijYtscp4Yur5itVrgx");
+export const PROGRAMID = new PublicKey('8xCfV1ppvAHikPeyRUGRPpVr5n8EtSg9cKMF1Ewm92Xh');
 
 export const initialize = async (
   publicKey: PublicKey,
@@ -107,17 +108,19 @@ export async function fetchAllCampaigns( anchor_wallet: AnchorWallet,
   const campaigns = await program.account.campaign.all();
   
   // Log all campaign accounts
-  campaigns.forEach((campaign) => {
-    console.log({
-      pubkey: campaign.publicKey.toString(),
-      owner: campaign.account.owner.toString(),
-      name: campaign.account.name,
-      amountRaised: campaign.account.amountRaised.toString(),
-      expectedAmount: campaign.account.expectedAmount.toString(),
-      endDate: campaign.account.endDate,
-      category: campaign.account.category,
-    });
-  });
+  // campaigns.forEach((campaign) => {
+  //   console.log({
+  //     pubkey: campaign.publicKey.toString(),
+  //     owner: campaign.account.owner.toString(),
+  //     name: campaign.account.name,
+  //     amountRaised: campaign.account.amountRaised.toString(),
+  //     expectedAmount: campaign.account.expectedAmount.toString(),
+  //     endDate: campaign.account.endDate,
+  //     category: campaign.account.category,
+  //   });
+  // });
+
+  return campaigns;
 }
 
 async function logTransaction(txHash: string, connection: Connection) {
