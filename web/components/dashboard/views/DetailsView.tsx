@@ -23,17 +23,17 @@ export const DetailsView: FC<DetailsViewProps> = ({
   campaignData,
   onDonateClick,
 }) => {
-  const { category, title, amount, raised, daysLeft } = campaignData;
+  // const { category, title, amount, raised, daysLeft } = campaignData;
 
   return (
     <div className="flex justify-center overflow-y-scroll pt-[3rem] md:pt-[6rem] font-mono ">
       <div className="w-full md:w-[45rem] h-[30rem] bg-stone-300 rounded-[24px] self-end p-4 md:p-6">
-        <p className="text-xl font-bold">{category}</p>
-        <p className="my-20 text-3xl font-extrabold">{title}</p>
+        <p className="text-xl font-bold">{campaignData.category}</p>
+        <p className="my-20 text-3xl font-extrabold">{campaignData.name}</p>
         <div className="border-2 rounded-lg border-black w-full h-[6rem] my-3 flex">
-          <InnerAmt text={'Raised (◎)'} amount={raised} />
-          <InnerAmt text={'Target (◎)'} amount={amount} />
-          <InnerAmt text={'Days left'} amount={daysLeft} />
+          <InnerAmt text={'Raised'} amount={Number(campaignData.amountRaised)}/>
+          <InnerAmt text={'Target'} amount={Number(campaignData.expectedAmount)} />
+          <InnerAmt text={'Days left'} amount={campaignData.endDate} />
         </div>
         <div className="mt-auto">
           <BaseButton text={'Donate now'} onClick={onDonateClick} />

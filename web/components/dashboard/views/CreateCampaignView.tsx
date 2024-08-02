@@ -1,14 +1,23 @@
-import { FC, useState } from 'react';
+
+import { ChangeEvent, FC, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
+import {  initialize } from '@/app/utils/helpers';
+import { useWalletConnect } from '../useWalletConnect';
 import { CampaignCategory } from '../types';
+import { toast, Toaster } from "sonner";
 // import Image from 'next/image';
 
 type CategoryCardProps = {
-  src: string;
+  src: string
   category: CampaignCategory;
   isSelected: boolean;
   onClick: () => void;
 };
+
+type CreateCampaignViewProps = {
+  setView: () => void;
+};
+
 const CategoryCard: FC<CategoryCardProps> = ({
   src,
   category,
@@ -36,15 +45,55 @@ const CategoryCard: FC<CategoryCardProps> = ({
   );
 };
 
-type CreateCampaignViewProps = {
-  onClick: () => void;
-};
 export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
-  onClick,
+  setView,
 }) => {
   const [category, setCategory] = useState<CampaignCategory>();
+
+  const [campaignTitle, setCampaignTitle] = useState<string>("");
+  const [campaignAmount, setCampaignAmount] = useState<string>("");
+  const [campaignDate, setCampaignDate] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+   const { connection, anchor_wallet, wallet } = useWalletConnect();
+  const publicKey = wallet.publicKey;
+
+  
+
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCampaignTitle(e.target.value);
+  };
+
+  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCampaignAmount(e.target.value);
+  };
+
+  const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCampaignDate(e.target.value);
+  };
+
+
+  const createCampaign = () => {
+    setIsLoading(true);
+    if (publicKey && anchor_wallet && connection && category) {
+      initialize(publicKey, anchor_wallet, connection, campaignTitle, campaignAmount,campaignDate,category)
+      .then((res) => {
+        console.log('res', res);
+        setIsLoading(false)
+        toast("Campaign created successfully");
+        setView()
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Oops something went wrong pls try again");
+        setIsLoading(false)
+      });
+     }
+  }
+
   return (
     <div className="flex flex-col justify-center items-center gap-2 font-mono">
+       <Toaster />
       <p className="font-mono self-center mb-[1rem]">
         Please select a category
       </p>
@@ -52,42 +101,42 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       <div className="flex px-5 md:px-0 md:justify-center gap-5 md:gap-10 flex-wrap w-full">
         <CategoryCard
           src={'/education.webp'}
-          category={'Education'}
-          isSelected={'Education' === category}
+          category={'education'}
+          isSelected={'education' === category}
           onClick={() => {
-            setCategory('Education');
+            setCategory('education');
           }}
         />
         <CategoryCard
           src={'/personal.webp'}
-          category={'Personal'}
-          isSelected={'Personal' === category}
+          category={'personal'}
+          isSelected={'personal' === category}
           onClick={() => {
-            setCategory('Personal');
+            setCategory('personal');
           }}
         />
         <CategoryCard
           src={'/community.webp'}
-          category={'Community'}
-          isSelected={'Community' === category}
+          category={'community'}
+          isSelected={'community' === category}
           onClick={() => {
-            setCategory('Community');
+            setCategory('community');
           }}
         />
         <CategoryCard
           src={'/health.webp'}
-          category={'Health'}
-          isSelected={'Health' === category}
+          category={'health'}
+          isSelected={'health' === category}
           onClick={() => {
-            setCategory('Health');
+            setCategory('health');
           }}
         />
         <CategoryCard
           src={'/project.webp'}
-          category={'Project'}
-          isSelected={'Project' === category}
+          category={'project'}
+          isSelected={'project' === category}
           onClick={() => {
-            setCategory('Project');
+            setCategory('project');
           }}
         />
       </div>
@@ -98,25 +147,36 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       <div className="flex flex-col gap-4">
         <input
           type="text"
+          value={campaignTitle}
+          onChange={handleTitleChange}
           placeholder="Enter campaign title"
           className="bg-white p-3 w-[22rem] rounded-xl focus-visible::border-0"
         />
         <input
           type="number"
+         value={campaignAmount}
+          onChange={handleAmountChange}
           placeholder="Amount (◎)"
           className="bg-white p-3 w-[22rem] rounded-xl focus-visible::border-0"
         />
         <input
           type="date"
+          value={campaignDate}
+          onChange={handleDateChange}
           // placeholder="Enter campaign target"
           className="bg-white text-black w-[22rem] p-3 rounded-xl focus-visible::border-0"
           min={new Date().toISOString()}
           style={{ color: 'black', colorScheme: 'light' }}
         />
       </div>
-      <div className="w-full max-w-[22rem] mt-2">
-        <BaseButton text={'Create a campaign'} onClick={onClick} />
+
+      <div className='w-full max-w-[22rem] mt-2'>
+        <BaseButton 
+          text={isLoading ? "...Loading":"Create a campaign"} 
+          onClick={createCampaign}
+        />
       </div>
     </div>
   );
 };
+
