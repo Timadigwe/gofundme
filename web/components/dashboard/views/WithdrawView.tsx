@@ -29,7 +29,7 @@ export const WithdrawFundView: FC<WithdrawViewProps> = ({ setView }) => {
         console.log('res', res);
         setIsLoading(false)
         toast('Amount withdrawn successfully')
-        setView()
+        setView();
       })
       .catch((err) => {
         console.error(err);

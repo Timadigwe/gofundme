@@ -16,6 +16,7 @@ import { WalletButton } from '../solana/solana-provider';
 import { useWalletConnect } from '../dashboard/useWalletConnect';
 import { fetchAllCampaigns } from '@/app/utils/helpers';
 
+
 type HeaderTextProps = {
   headerText: string;
 };
