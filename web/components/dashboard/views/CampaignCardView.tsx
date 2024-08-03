@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
 import { CampaignCategory, CampaignData } from '../types';
 import { getDaysLeft } from '../daysLeft';

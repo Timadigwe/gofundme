@@ -4,13 +4,13 @@ import {
   BN,
   type Idl,
   Program,
-  type Provider,
+  // type Provider,
   setProvider,
 } from '@coral-xyz/anchor';
 import { getAssociatedTokenAddress, getMint } from '@solana/spl-token';
 import type { AnchorWallet } from '@solana/wallet-adapter-react';
 import { type Connection, PublicKey, SystemProgram } from '@solana/web3.js';
-import { Gofundmeprogram } from '@/idl/types/gofundmeprogram';
+// import { Gofundmeprogram } from '@/idl/types/gofundmeprogram';
 import idl from '../../idl/gofundmeprogram.json';
 import { CampaignData } from '@/components/dashboard/types';
 
@@ -50,12 +50,12 @@ export const initialize = async (
         publicKey
       );
 
-      let [campaignOwnerPDA, campaignBump] = PublicKey.findProgramAddressSync(
+      const [campaignOwnerPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from('owner'), Buffer.from(campaignName)],
         PROGRAMID
       );
 
-      let [tokenVault, bump] = PublicKey.findProgramAddressSync(
+      const [tokenVault] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('vault'),
           usdcDevCoinMintAddress.toBuffer(),
@@ -67,7 +67,7 @@ export const initialize = async (
       console.log('TokenAccountOwnerPda: ' + campaignOwnerPDA);
       console.log('VaultAccount: ' + tokenVault);
 
-      let confirmOptions = {
+      const confirmOptions = {
         skipPreflight: true,
       };
 
@@ -78,7 +78,7 @@ export const initialize = async (
         throw new Error('Initialize method is not found in the program IDL.');
       }
 
-      let txHash = await program.methods
+      const txHash = await program.methods
         .initialize(
           campaignName,
           new BN(parseInt(campaignAmount)),
@@ -125,12 +125,12 @@ export const donate = async (
         publicKey
       );
 
-      let [campaignOwnerPDA, campaignBump] = PublicKey.findProgramAddressSync(
+      const [campaignOwnerPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from('owner'), Buffer.from(campaignName)],
         PROGRAMID
       );
 
-      let [tokenVault, bump] = PublicKey.findProgramAddressSync(
+      const [tokenVault] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('vault'),
           usdcDevCoinMintAddress.toBuffer(),
@@ -142,11 +142,11 @@ export const donate = async (
       console.log('TokenAccountOwnerPda: ' + campaignOwnerPDA);
       console.log('VaultAccount: ' + tokenVault);
 
-      let confirmOptions = {
+      const confirmOptions = {
         skipPreflight: true,
       };
 
-      let txHash = await program.methods
+      const txHash = await program.methods
         .donate(campaignName, new BN(parseInt(amount) * mintDecimals))
         .accounts({
           campaign: campaignOwnerPDA,
@@ -188,12 +188,12 @@ export const withdraw = async (
         publicKey
       );
 
-      let [campaignOwnerPDA, campaignBump] = PublicKey.findProgramAddressSync(
+      const [campaignOwnerPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from('owner'), Buffer.from(campaignName)],
         PROGRAMID
       );
 
-      let [tokenVault, bump] = PublicKey.findProgramAddressSync(
+      const [tokenVault] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('vault'),
           usdcDevCoinMintAddress.toBuffer(),
@@ -205,11 +205,11 @@ export const withdraw = async (
       console.log('TokenAccountOwnerPda: ' + campaignOwnerPDA);
       console.log('VaultAccount: ' + tokenVault);
 
-      let confirmOptions = {
+      const confirmOptions = {
         skipPreflight: true,
       };
 
-      let txHash = await program.methods
+      const txHash = await program.methods
         .withdraw(campaignName, new BN(parseInt(amount) * mintDecimals))
         .accounts({
           campaign: campaignOwnerPDA,
