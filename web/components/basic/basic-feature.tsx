@@ -4,13 +4,13 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { ExplorerLink } from '../cluster/cluster-ui';
 import { WalletButton } from '../solana/solana-provider';
 import { AppHero, ellipsify } from '../ui/ui-layout';
-import { useBasicProgram } from './basic-data-access';
-import { BasicCreate, BasicProgram } from './basic-ui';
+// import { useBasicProgram } from './basic-data-access';
+// import { BasicCreate, BasicProgram } from './basic-ui';
 
 export default function BasicFeature() {
   const { publicKey } = useWallet();
-  const { programId } = useBasicProgram();
-  console.log({programId});
+  // const { programId } = useBasicProgram();
+  // console.log({programId});
 
   return publicKey ? (
     <div>
@@ -19,14 +19,14 @@ export default function BasicFeature() {
         subtitle={'Run the program by clicking the "Run program" button.'}
       >
         <p className="mb-6">
-          <ExplorerLink
+          {/* <ExplorerLink
             path={`account/${programId}`}
             label={ellipsify(programId.toString())}
-          />
+          /> */}
         </p>
-        <BasicCreate />
+        {/* <BasicCreate /> */}
       </AppHero>
-      <BasicProgram />
+      {/* <BasicProgram /> */}
     </div>
   ) : (
     <div className="max-w-4xl mx-auto">

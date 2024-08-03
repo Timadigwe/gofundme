@@ -55,7 +55,7 @@ export default function DashboardFeature() {
     health: 'health2.jpg',
     personal: 'personal2.png',
   };
-  const src = DetailsBgImgSrcMap[currentData.category?.toLowerCase()];
+  const src  = currentData.category ? DetailsBgImgSrcMap[currentData.category?.toLowerCase() as CampaignCategory] : undefined;
 
   useEffect(() => {
     console.log("fetching data");
