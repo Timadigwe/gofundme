@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
 
 import { IconArrowLeft } from '@tabler/icons-react';
@@ -11,11 +10,10 @@ import { BaseButton } from './buttons/BaseButton';
 import { WithdrawFundView } from './views/WithdrawView';
 import { CampaignCardView } from './views/CampaignCardView';
 import { CreateCampaignView } from './views/CreateCampaignView';
-import { CampaignCategory, CampaignData } from './types';
+import { CampaignCategory, CampaignData, DefaultCampaignData } from './types';
 import { WalletButton } from '../solana/solana-provider';
 import { useWalletConnect } from '../dashboard/useWalletConnect';
 import { fetchAllCampaigns } from '@/app/utils/helpers';
-
 
 type HeaderTextProps = {
   headerText: string;
@@ -38,15 +36,16 @@ enum AppView {
 export default function DashboardFeature() {
   const [view, setView] = useState(AppView.CampaignList);
 
-  const [currentData, setCurrentData] = useState<any>({ title: '', amount: 0 });
+  const [currentData, setCurrentData] =
+    useState<CampaignData>(DefaultCampaignData);
   const { connection, anchor_wallet } = useWalletConnect();
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
 
-  const onCardClick = (campaignData :any) => {
-    //console.log("campaign data",campaignData)
+  const onCardClick = (campaignData: CampaignData) => {
+    console.log({ campaignData });
     setCurrentData(campaignData);
     setView(AppView.CampaignDetails);
-  }
+  };
 
   const DetailsBgImgSrcMap: Record<CampaignCategory, string> = {
     project: 'project2.jpg',
@@ -55,24 +54,27 @@ export default function DashboardFeature() {
     health: 'health2.jpg',
     personal: 'personal2.png',
   };
-  const src  = currentData.category ? DetailsBgImgSrcMap[currentData.category?.toLowerCase() as CampaignCategory] : undefined;
+  const src = currentData.account.category
+    ? DetailsBgImgSrcMap[currentData?.account?.category]
+    : undefined;
 
   useEffect(() => {
-    console.log("fetching data");
-    const fetchCampaigns = async() => {
-      if(anchor_wallet && connection){
-       await fetchAllCampaigns(anchor_wallet,connection)
-       .then((campaigns) => {
-         //console.log("campaigns", campaigns)
-         setCampaigns(campaigns)
-       })
-       .catch((err) => {
-         console.error(err)
-       })
+    const fetchCampaigns = () => {
+      console.log('fetching data');
+      console.log({ anchor_wallet, connection });
+      if (anchor_wallet && connection) {
+        fetchAllCampaigns(anchor_wallet, connection)
+          .then((campaigns) => {
+            console.log('campaigns', campaigns);
+            setCampaigns(campaigns);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       }
-    }
-    fetchCampaigns()
-   },[])
+    };
+    fetchCampaigns();
+  }, [anchor_wallet]);
 
   return (
     <div
@@ -159,14 +161,11 @@ export default function DashboardFeature() {
       )}
 
       {view === AppView.WithdrawFund && (
-        <WithdrawFundView setView={() => setView(AppView.WithdrawFund)} />
+        <WithdrawFundView setView={() => setView(AppView.CampaignList)} />
       )}
 
       {view === AppView.CampaignList && (
-        <CampaignCardView
-          onCardClick={onCardClick}
-          campaigns={campaigns}
-        />
+        <CampaignCardView onCardClick={onCardClick} campaigns={campaigns} />
       )}
 
       {view === AppView.CampaignDetails && (
@@ -182,7 +181,7 @@ export default function DashboardFeature() {
             // console.log('lol!');
             setView(AppView.CampaignList);
           }}
-          campaignName={currentData?.name}
+          campaignName={currentData?.account?.name}
         />
       )}
     </div>

@@ -2,7 +2,7 @@ import { ChangeEvent, FC, useState } from 'react';
 import { BaseButton } from '../buttons/BaseButton';
 import { useWalletConnect } from '../useWalletConnect';
 import { withdraw } from '@/app/utils/helpers';
-import { toast, Toaster } from "sonner";
+import { toast, Toaster } from 'sonner';
 
 type WithdrawViewProps = {
   setView: () => void;
@@ -11,8 +11,8 @@ export const WithdrawFundView: FC<WithdrawViewProps> = ({ setView }) => {
   const { connection, anchor_wallet, wallet } = useWalletConnect();
   const publicKey = wallet.publicKey;
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [campaignTitle, setCampaignTitle] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
+  const [campaignTitle, setCampaignTitle] = useState<string>('');
+  const [amount, setAmount] = useState<string>('');
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCampaignTitle(e.target.value);
@@ -23,28 +23,29 @@ export const WithdrawFundView: FC<WithdrawViewProps> = ({ setView }) => {
   };
 
   const withdrawFunds = () => {
-    if (publicKey && anchor_wallet && connection && amount && campaignTitle) { 
-      withdraw(publicKey,anchor_wallet,connection,campaignTitle,amount)
-      .then((res) => {
-        console.log('res', res);
-        setIsLoading(false)
-        toast('Amount withdrawn successfully')
-        setView();
-      })
-      .catch((err) => {
-        console.error(err);
-        setIsLoading(false)
-        toast('Something went wrong pls try again')
-        setView()
-      });
+    if (publicKey && anchor_wallet && connection && amount && campaignTitle) {
+      setIsLoading(true);
+      withdraw(publicKey, anchor_wallet, connection, campaignTitle, amount)
+        .then((res) => {
+          console.log('res', res);
+          setIsLoading(false);
+          toast('Amount withdrawn successfully');
+          setView();
+        })
+        .catch((err) => {
+          console.error(err);
+          setIsLoading(false);
+          toast('Something went wrong pls try again');
+          setView();
+        });
     }
-  }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center mt-[10rem] gap-2 font-mono">
-      <Toaster/>
+      <Toaster />
       <div className="flex flex-col gap-4">
-      <input
+        <input
           type="text"
           value={campaignTitle}
           onChange={handleTitleChange}
@@ -61,7 +62,10 @@ export const WithdrawFundView: FC<WithdrawViewProps> = ({ setView }) => {
       </div>
 
       <div className="w-full max-w-[22rem] mt-2">
-        <BaseButton text={isLoading ? "...Loading" :'Withdraw Funds'} onClick={withdrawFunds} />
+        <BaseButton
+          text={isLoading ? '...Loading' : 'Withdraw Funds'}
+          onClick={withdrawFunds}
+        />
       </div>
     </div>
   );
