@@ -58,21 +58,22 @@ export default function DashboardFeature() {
     ? DetailsBgImgSrcMap[currentData?.account?.category]
     : undefined;
 
+  const fetchCampaigns = () => {
+    console.log('fetching data');
+    console.log({ anchor_wallet, connection });
+    if (anchor_wallet && connection) {
+      fetchAllCampaigns(anchor_wallet, connection)
+        .then((campaigns) => {
+          console.log('campaigns', campaigns);
+          setCampaigns(campaigns);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
+
   useEffect(() => {
-    const fetchCampaigns = () => {
-      console.log('fetching data');
-      console.log({ anchor_wallet, connection });
-      if (anchor_wallet && connection) {
-        fetchAllCampaigns(anchor_wallet, connection)
-          .then((campaigns) => {
-            console.log('campaigns', campaigns);
-            setCampaigns(campaigns);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
-    };
     fetchCampaigns();
   }, [anchor_wallet]);
 
@@ -157,11 +158,21 @@ export default function DashboardFeature() {
       )}
 
       {view === AppView.CampaignCreate && (
-        <CreateCampaignView setView={() => setView(AppView.CampaignList)} />
+        <CreateCampaignView
+          setView={() => {
+            fetchCampaigns();
+            setView(AppView.CampaignList);
+          }}
+        />
       )}
 
       {view === AppView.WithdrawFund && (
-        <WithdrawFundView setView={() => setView(AppView.CampaignList)} />
+        <WithdrawFundView
+          setView={() => {
+            fetchCampaigns();
+            setView(AppView.CampaignList);
+          }}
+        />
       )}
 
       {view === AppView.CampaignList && (
@@ -179,6 +190,7 @@ export default function DashboardFeature() {
         <DonateView
           onClick={() => {
             // console.log('lol!');
+            fetchCampaigns();
             setView(AppView.CampaignList);
           }}
           campaignName={currentData?.account?.name}
