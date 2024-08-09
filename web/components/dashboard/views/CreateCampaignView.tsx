@@ -150,21 +150,21 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
           value={campaignTitle}
           onChange={handleTitleChange}
           placeholder="Enter campaign title"
-          className="bg-white p-3 w-[22rem] sm:w-[10rem] rounded-xl focus-visible::border-0"
+          className="bg-white p-3 lg:w-[22rem] md:w-[22rem] mx-auto rounded-xl focus-visible::border-0"
         />
         <input
           type="number"
          value={campaignAmount}
           onChange={handleAmountChange}
           placeholder="Amount (◎)"
-          className="bg-white p-3 w-[22rem] rounded-xl focus-visible::border-0"
+          className="bg-white p-3 lg:w-[22rem] md:w-[22rem] mx-auto rounded-xl focus-visible::border-0"
         />
         <input
           type="date"
           value={campaignDate}
           onChange={handleDateChange}
           // placeholder="Enter campaign target"
-          className="bg-white text-black w-[22rem] p-3 rounded-xl focus-visible::border-0"
+          className="bg-white text-black lg:w-[22rem] md:w-[22rem] mx-auto p-3 rounded-xl focus-visible::border-0"
           min={new Date().toISOString()}
           style={{ color: 'black', colorScheme: 'light' }}
         />
