@@ -26,7 +26,7 @@ const CategoryCard: FC<CategoryCardProps> = ({
 }) => {
   return (
     <div
-      className="z-10 rounded-[24px] bg-cover bg-center bg-no-repeat cursor-pointer relative w-[9rem] h-[12.6rem] md:w-[13rem] md:h-[18.2rem]"
+      className="z-10 rounded-[24px] bg-cover bg-center bg-no-repeat cursor-pointer relative w-[9rem] h-[12.6rem] md:w-[13rem] md:h-[18.2rem] mx-auto lg:mx-0 md:mx-0"
       onClick={onClick}
       style={{ backgroundImage: `url(${src})` }}
     >
@@ -144,13 +144,13 @@ export const CreateCampaignView: FC<CreateCampaignViewProps> = ({
       {/* spacer */}
       <div className="h-8 w-4"></div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full">
         <input
           type="text"
           value={campaignTitle}
           onChange={handleTitleChange}
           placeholder="Enter campaign title"
-          className="bg-white p-3 w-[22rem] rounded-xl focus-visible::border-0"
+          className="bg-white p-3 w-[22rem] sm:w-[10rem] rounded-xl focus-visible::border-0"
         />
         <input
           type="number"
