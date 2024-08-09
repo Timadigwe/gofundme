@@ -65,7 +65,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ campaignData, onCardClick }) => {
 
   return (
     <div
-      className={`w-full sm:max-w-[22rem] lg:max-w-[20rem] hover:lg:max-w-[20.5rem] min-h-[16rem] rounded-2xl p-6 relative shadow-lg hover:shadow-xl transition-all duration-300 ${getCategoryClass(
+      className={`w-full sm:max-w-[22rem] lg:max-w-[20rem] min-h-[16rem] rounded-2xl p-6 relative shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 ${getCategoryClass(
         campaignData.account.category.toLowerCase() as CampaignCategory
       )}`}
       onClick={onCardClick}
