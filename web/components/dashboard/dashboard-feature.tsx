@@ -42,7 +42,7 @@ export default function DashboardFeature() {
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
 
   const onCardClick = (campaignData: CampaignData) => {
-    console.log({ campaignData });
+    // console.log({ campaignData });
     setCurrentData(campaignData);
     setView(AppView.CampaignDetails);
   };
@@ -59,16 +59,16 @@ export default function DashboardFeature() {
     : undefined;
 
   const fetchCampaigns = () => {
-    console.log('fetching data');
-    console.log({ anchor_wallet, connection });
+    // console.log('fetching data');
+    // console.log({ anchor_wallet, connection });
     if (anchor_wallet && connection) {
       fetchAllCampaigns(anchor_wallet, connection)
         .then((campaigns) => {
-          console.log('campaigns', campaigns);
+          // console.log('campaigns', campaigns);
           setCampaigns(campaigns);
         })
         .catch((err) => {
-          console.error(err);
+          // console.error(err);
         });
     }
   };

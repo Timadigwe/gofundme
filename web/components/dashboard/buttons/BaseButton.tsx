@@ -10,7 +10,7 @@ export const BaseButton: FC<BaseButtonProps> = ({
 }) => {
   return (
     <button
-      className="hover:p-[14px] ease-out duration-800 w-full p-[13px] rounded-xl text-sm text-white bg-black font-mono"
+      className="hover:bg-violet-600 ease-out duration-800 w-full p-[13px] rounded-xl text-sm text-white hover:text-black hover:font-semibold bg-black font-mono transition-all duration-300"
       onClick={(e) => {
         e.stopPropagation();
         onClick();
